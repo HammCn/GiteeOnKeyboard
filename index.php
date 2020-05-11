@@ -352,6 +352,7 @@
                         that.config.alt = true;
                         break;
                     case 37:
+                        // left
                         var index = that.config.repoSelectedIndex - 1;
                         index = index >= 0 ? index : 0;
                         that.config.repoSelectedIndex = index;
@@ -360,6 +361,7 @@
                         });
                         break;
                     case 38:
+                        //top
                         if (that.config.showRepoDetail) {
                             var value = document.getElementById('repo_detail').scrollTop - 100;
                             document.getElementById('repo_detail').scrollTop = value > 0 ? value : 0;
@@ -373,6 +375,7 @@
                         }
                         break;
                     case 39:
+                        //right
                         var index = that.config.repoSelectedIndex + 1;
                         index = index <= that.repos.length - 1 ? index : that.repos.length - 1;
                         that.config.repoSelectedIndex = index;
@@ -385,6 +388,7 @@
                         }
                         break;
                     case 40:
+                        //down
                         if (that.config.showRepoDetail) {
                             var value = document.getElementById('repo_detail').scrollTop + 100;
                             document.getElementById('repo_detail').scrollTop = value > 0 ? value : 0;
@@ -402,6 +406,7 @@
                         }
                         break;
                     case 27:
+                        //esc
                         if (that.config.showRepoDetail) {
                             that.config.showRepoDetail = false;
                         } else {
@@ -416,6 +421,7 @@
                         }
                         break;
                     case 112:
+                        //F1
                         that.$message({
                             dangerouslyUseHTMLString: true,
                             type: '',
@@ -457,6 +463,7 @@
                         }
                         break;
                     case 122:
+                        //F5 maybe you need to press F5 to reload the page.
                         EventStop = false;
                         break;
                     default:
@@ -507,13 +514,15 @@
                                 that.$message.error(response.data.msg);
                             } else {
                                 that.repo = response.data;
+                                //get the readme file and show it.
                                 axios.get(that.config.api + 'api/v5/repos/' + that.repos[that.config.repoSelectedIndex].full_name + "/readme", {})
                                     .then(function (response) {
                                         if (response.data.hasOwnProperty("message")) {
                                             that.$message.error(response.data.msg);
                                         } else {
-                                            that.readme = marked(base64_decode(response.data.content));
-                                            console.log(that.readme);
+                                            var readme = marked(base64_decode(response.data.content));
+                                            //the images on gitee need to proxied by your self, like this:
+                                            that.readme = readme.replace(/images.gitee.com/g,'gitee.hamm.cn');
                                         }
                                     }).
                                     catch(function (error) {
@@ -545,6 +554,7 @@
                     spinner: 'el-icon-loading',
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
+                //Search projects on gitee
                 axios.get(that.config.api + 'api/v5/search/repositories?page=' + that.config.page + '&per_page=50&q=' + that.config.keyword, {})
                     .then(function (response) {
                         loading.close();
@@ -587,15 +597,8 @@
             },
         }
     });
-    /*
-  *  base64编码(编码，配合encodeURIComponent使用)
-  *  @parm : str 传入的字符串
-  *  使用：
-        1、引入util.js(路径更改) :const util  = require('../../utils/util.js');
-        2、util.base64_encode(util.utf16to8('base64 编码'));
- */
+    // base64 encode
     function base64_encode(str) {
-        //下面是64个基本的编码
         var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var out, i, len;
         var c1, c2, c3;
@@ -626,10 +629,6 @@
         }
         return out;
     }
-    /*
-      *  base64编码(编码，配合encodeURIComponent使用)
-      *  @parm : str 传入的字符串
-     */
     function utf16to8(str) {
         var out, i, len, c;
         out = "";
