@@ -187,6 +187,10 @@
             display: block;
         }
 
+        .search .link {
+            margin-top: 20px;
+        }
+
         .repo_detail {
             position: fixed;
             left: 0;
@@ -261,6 +265,11 @@
                 placeholder="Tell me what you want..." class="form" size="large">
                 <el-button slot="append" icon="el-icon-search" @click="doSearch">Gitee Search</el-button>
             </el-input>
+            <div class="link">
+                <el-link type="info" href="https://gitee.com/api/v5/swagger" target="_blank">Data from OpenAPI</el-link>
+                <el-link type="info" href="https://gitee.com/hamm/GiteeOnKeyboard" target="_blank">Project on Gitee
+                </el-link>
+            </div>
         </div>
         <div class="repos">
             <el-row v-if="repos.length>0">
@@ -279,12 +288,6 @@
                     </div>
                 </el-col>
             </el-row>
-            <div v-if="repos.length==0" class="tips">
-                <img src="/static/gitee.png" />
-                <div class="text">
-                    Nothing Found!
-                </div>
-            </div>
         </div>
         <div id="repo_detail" class="repo_detail" v-if="config.showRepoDetail">
             <div class="name">
